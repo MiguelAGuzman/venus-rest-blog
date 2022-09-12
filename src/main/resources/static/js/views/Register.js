@@ -39,7 +39,7 @@ export function RegisterEvent(){
             password: passwordField.value
         }
 
-        console.log(newUser);
+        // console.log(newUser);
 
         let request = {
             method: "POST",

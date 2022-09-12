@@ -3,6 +3,8 @@ package miguelguzman.venusrestblog.controller;
 import miguelguzman.venusrestblog.data.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,52 @@ public class UsersController {
         // we found the post so just return it
         return user;
     }
+
+    @GetMapping("/me")
+    private User fetchMe() {
+        return users.get(0);
+    }
+
+    @GetMapping("/username/{userName}")
+    private User fetchByUserName(@PathVariable String userName) {
+        User user = findUserByUserName(userName);
+        if(user == null) {
+            // what to do if we don't find it
+            throw new RuntimeException("I don't know what I am doing");
+        }
+        return user;
+    }
+
+    @GetMapping("/email/{email}")
+    private User fetchByEmail(@PathVariable String email) {
+        User user = findUserByEmail(email);
+        if(user == null) {
+            // what to do if we don't find it
+            throw new RuntimeException("I don't know what I am doing");
+        }
+        return user;
+    }
+
+    private User findUserByUserName(String userName) {
+        for (User user: users) {
+            if(user.getUserName().equals(userName)) {
+                return user;
+            }
+        }
+        // didn't find it so do something
+        return null;
+    }
+
+    private User findUserByEmail(String email) {
+        for (User user: users) {
+            if(user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        // didn't find it so do something
+        return null;
+    }
+
     private User findUserById(long id) {
         for (User user: users) {
             if(user.getId() == id) {
@@ -69,5 +117,25 @@ public class UsersController {
             return;
         }
         throw new RuntimeException("User not found");
+    }
+
+    @PutMapping("/{id}/updatePassword")
+    private void updatePassword(@PathVariable Long id, @RequestParam(required = false) String oldPassword, @Valid @Size(min = 3) @RequestParam String newPassword) {
+        User user = findUserById(id);
+        if(user == null) {
+            throw new RuntimeException("cannot find user " + id);
+        }
+
+        // compare old password with saved pw
+        if(!user.getPassword().equals(oldPassword)) {
+            throw new RuntimeException("amscray");
+        }
+
+        // validate new password
+        if(newPassword.length() < 3) {
+            throw new RuntimeException("new pw length must be at least 3");
+        }
+
+        user.setPassword(newPassword);
     }
 }
