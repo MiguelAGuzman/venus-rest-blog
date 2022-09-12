@@ -26,12 +26,17 @@ export default function Register(props) {
 }
 
 export function RegisterEvent(){
-    $("#register-btn").click(function(){
+    const registerButton = document.querySelector("#register-btn");
+    registerButton.addEventListener("click", function () {
+
+        const usernameField = document.querySelector("#username");
+        const emailField = document.querySelector("#email");
+        const passwordField = document.querySelector("#password");
 
         let newUser = {
-            username: $("#username").val(),
-            email: $("#email").val(),
-            password: $("#password").val()
+            username: usernameField.value,
+            email: emailField.value,
+            password: passwordField.value
         }
 
         console.log(newUser);
@@ -42,7 +47,7 @@ export function RegisterEvent(){
             body: JSON.stringify(newUser)
         }
 
-        fetch("http://localhost:8080/api/users", request)
+        fetch(USER_API_BASE_URL + "/create", request)
             .then(response => {
                 console.log(response.status);
                 CreateView("/");
