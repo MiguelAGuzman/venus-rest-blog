@@ -1,6 +1,8 @@
 package miguelguzman.venusrestblog.controller;
 
+import miguelguzman.venusrestblog.data.Category;
 import miguelguzman.venusrestblog.data.Post;
+import miguelguzman.venusrestblog.data.User;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -48,6 +50,21 @@ public class PostsController {
 //        System.out.println(newPost);
         // assign  nextId to the new post
         newPost.setId(nextId);
+
+        // use a fake author for the post
+        User fakeAuthor = new User();
+        fakeAuthor.setId(99);
+        fakeAuthor.setUserName("fake author");
+        fakeAuthor.setEmail("fakeauthor@stuff.com");
+        newPost.setAuthor(fakeAuthor);
+
+        // make some fake categories and throw them in the new post
+        Category cat1 = new Category(1L, "bunnies", null);
+        Category cat2 = new Category(2L, "margaritas", null);
+        newPost.setCategories(new ArrayList<>());
+        newPost.getCategories().add(cat1);
+        newPost.getCategories().add(cat2);
+
         nextId++;
 
         posts.add(newPost);
