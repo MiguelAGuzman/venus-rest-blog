@@ -39,15 +39,29 @@ function generatePostsHTML(posts) {
         <tr>
             <th scope="col">Title</th>
             <th scope="col">Content</th>
+            <th scope="col">Categories</th>
+            <th scope="col">Author</th>
         </tr>
         </thead>
         <tbody>
     `;
+
     for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
+
+        let categories = '';
+        for (let j = 0; j < post.categories.length; j++) {
+            if(categories !== "") {
+                categories += ", ";
+            }
+            categories += post.categories[j].name;
+        }
+
         postsHTML += `<tr>
             <td>${post.title}</td>
             <td>${post.content}</td>
+            <td>${categories}</td>
+            <td>${post.author.userName}</td>
             <td><button data-id=${post.id} class="button btn-primary editPost">Edit</button></td>
             <td><button data-id=${post.id} class="button btn-danger deletePost">Delete</button></td>
             </tr>`;
@@ -55,8 +69,6 @@ function generatePostsHTML(posts) {
     postsHTML += `</tbody></table>`;
     return postsHTML;
 }
-
-
 
 
 export function postSetup() {

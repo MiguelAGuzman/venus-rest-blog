@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -52,7 +53,7 @@ public class UsersController {
 
     @GetMapping("/me")
     private User fetchMe() {
-        return users.get(0);
+        return usersRepository.findById(1L);
     }
 
     @GetMapping("/username/{userName}")
