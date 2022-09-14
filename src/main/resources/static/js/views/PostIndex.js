@@ -57,6 +57,11 @@ function generatePostsHTML(posts) {
             categories += post.categories[j].name;
         }
 
+        let authorName = "";
+        if(post.author) {
+            authorName = post.author.name;
+        }
+
         postsHTML += `<tr>
             <td>${post.title}</td>
             <td>${post.content}</td>
@@ -154,7 +159,6 @@ function deletePost(postId) {
                 console.log(response.statusText);
                 return;
             }
-            // TODO: check the response code
             CreateView("/posts");
         })
 }
