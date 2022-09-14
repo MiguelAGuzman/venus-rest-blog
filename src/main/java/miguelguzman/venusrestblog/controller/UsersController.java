@@ -1,10 +1,16 @@
 package miguelguzman.venusrestblog.controller;
 
+import miguelguzman.venusrestblog.data.Post;
 import miguelguzman.venusrestblog.data.User;
+import miguelguzman.venusrestblog.data.UserRole;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +18,25 @@ import java.util.List;
 @RequestMapping(value = "/api/users", produces = "application/json")
 public class UsersController {
     private List<User> users = new ArrayList<>();
-    private long nextId = 1;
+    private long nextId = 2;
+
+    @PostConstruct
+    public void init() {
+        User me = new User(1, "docrob", "docrob@docrob.com", "12345", LocalDate.now(), UserRole.ADMIN, new ArrayList<>());
+        users.add(me);
+
+        Post myPost = new Post(100L, "doc post 1", "post 1 from doc", null, null);
+        me.getPosts().add(myPost);
+
+        myPost = new Post(101L, "doc post 2", "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem ", null, null);
+        me.getPosts().add(myPost);
+    }
+
     @GetMapping("")
     public List<User> fetchUsers() {
         return users;
     }
+
     @GetMapping("/{id}")
     public User fetchUserById(@PathVariable long id) {
         // search through the list of posts
@@ -89,6 +109,8 @@ public class UsersController {
 //       System.out.println(newPost);
         // assign  nextId to the new post
         newUser.setId(nextId);
+        // don't need the below line at this point but just for kicks
+        newUser.setCreatedAt(LocalDate.now());
         nextId++;
         users.add(newUser);
     }
@@ -123,7 +145,7 @@ public class UsersController {
     private void updatePassword(@PathVariable Long id, @RequestParam(required = false) String oldPassword, @Valid @Size(min = 3) @RequestParam String newPassword) {
         User user = findUserById(id);
         if(user == null) {
-            throw new RuntimeException("cannot find user " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User id " + id + " not found");
         }
 
         // compare old password with saved pw
