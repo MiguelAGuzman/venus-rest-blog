@@ -1,9 +1,12 @@
 package miguelguzman.venusrestblog.controller;
 
+import lombok.AllArgsConstructor;
 import miguelguzman.venusrestblog.data.Category;
 import miguelguzman.venusrestblog.data.Post;
 import miguelguzman.venusrestblog.data.User;
+import miguelguzman.venusrestblog.repository.CategoriesRepository;
 import miguelguzman.venusrestblog.repository.PostsRepository;
+import miguelguzman.venusrestblog.repository.UsersRepository;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -11,14 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping(value = "/api/posts", produces = "application/json")
 public class PostsController {
     private PostsRepository postsRepository;
-
-    public PostsController(PostsRepository postsRepository) {
-        this.postsRepository = postsRepository;
-    }
+    private UsersRepository usersRepository;
+    private CategoriesRepository categoriesRepository;
 
     @GetMapping("")
     public List<Post> fetchPosts() {
@@ -34,11 +36,14 @@ public class PostsController {
     public void createPost(@RequestBody Post newPost) {
 
         // use a fake author for the post
-//        User fakeAuthor = new User();
-//        fakeAuthor.setId(99);
-//        fakeAuthor.setUserName("fake author");
-//        fakeAuthor.setEmail("fakeauthor@stuff.com");
-//        newPost.setAuthor(fakeAuthor);
+        User author = usersRepository.findById(1L).get();
+        newPost.setAuthor(author);
+
+        Category cat1 = categoriesRepository.findById(1L).get();
+        Category cat2 = categoriesRepository.findById(2L).get();
+        newPost.setCategories(new ArrayList<>());
+        newPost.getCategories().add(cat1);
+        newPost.getCategories().add(cat2);
 //
 //        // make some fake categories and throw them in the new post
 //        Category cat1 = new Category(1L, "bunnies", null);
