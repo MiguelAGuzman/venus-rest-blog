@@ -7,6 +7,7 @@ import miguelguzman.venusrestblog.data.User;
 import miguelguzman.venusrestblog.repository.CategoriesRepository;
 import miguelguzman.venusrestblog.repository.PostsRepository;
 import miguelguzman.venusrestblog.repository.UsersRepository;
+import miguelguzman.venusrestblog.service.EmailService;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -84,5 +85,16 @@ public class PostsController {
 //            return;
 //        }
 //        throw new RuntimeException("Post not found");
+    }
+
+    @RestController
+    class PostsController {
+        // ...
+        private final EmailService emailService;
+
+        public PostsController(EmailService emailService) {
+            this.emailService = emailService;
+        }
+        // ...
     }
 }
