@@ -1,4 +1,4 @@
-package miguelguzman.venusrestblog.misc_stuff;
+package miguelguzman.venusrestblog.misc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class DogTest {
 
         Dog aDog = fetchDog();
         // have to manually add null check to avoid an error
-        if(aDog == null) {
+        if (aDog == null) {
             System.out.println("no dog found");
         } else {
             System.out.println(aDog.getName());
@@ -52,15 +52,15 @@ public class DogTest {
 //        dogs.add(new Dog("Spot"));
 
         Optional<Dog> aDog = fetchDogOptional();
-        if(aDog.isEmpty()) {
-            System.out.println("no dog found");
-        } else {
-            System.out.println(aDog.get().getName());
-        }
+//        if(aDog.isEmpty()) {
+//            System.out.println("no dog found");
+//        } else {
+        System.out.println(aDog.get().getName());
+//        }
     }
 
     public static Dog fetchDog() {
-        if(dogs.size() == 0)
+        if (dogs.size() == 0)
             return null;
         return dogs.get(0);
     }

@@ -1,4 +1,4 @@
-package miguelguzman.venusrestblog.misc_stuff;
+package miguelguzman.venusrestblog.misc;
 
 import lombok.*;
 
