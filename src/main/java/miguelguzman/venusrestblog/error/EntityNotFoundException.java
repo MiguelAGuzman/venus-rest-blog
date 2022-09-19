@@ -1,4 +1,4 @@
-package com.example.restblog.errors;
+package miguelguzman.venusrestblog.error;
 
 import org.springframework.util.StringUtils;
 

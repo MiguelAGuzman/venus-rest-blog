@@ -1,4 +1,4 @@
-package com.example.restblog.errors;
+package miguelguzman.venusrestblog.error;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;

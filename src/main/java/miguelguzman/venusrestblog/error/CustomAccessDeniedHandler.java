@@ -1,4 +1,4 @@
-package com.example.restblog.errors;
+package miguelguzman.venusrestblog.error;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
