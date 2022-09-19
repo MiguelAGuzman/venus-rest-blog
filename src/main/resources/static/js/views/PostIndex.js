@@ -87,7 +87,7 @@ function setupEditHandlers() {
     const editButtons = document.querySelectorAll(".editPost");
     // add click handler to all delete buttons
     for (let i = 0; i < editButtons.length; i++) {
-        editButtons[i].addEventListener("click", function(event) {
+        editButtons[i].addEventListener("click", function() {
 
             // get the post id of the delete button
             const postId = parseInt(this.getAttribute("data-id"));
@@ -136,7 +136,7 @@ function setupDeleteHandlers() {
     const deleteButtons = document.querySelectorAll(".deletePost");
     // add click handler to all delete buttons
     for (let i = 0; i < deleteButtons.length; i++) {
-        deleteButtons[i].addEventListener("click", function(event) {
+        deleteButtons[i].addEventListener("click", function() {
 
             // get the post id of the delete button
             const postId = this.getAttribute("data-id");
@@ -168,7 +168,7 @@ function deletePost(postId) {
 
 function setupSaveHandler() {
     const saveButton = document.querySelector("#savePost");
-    saveButton.addEventListener("click", function(event) {
+    saveButton.addEventListener("click", function() {
         const postId = parseInt(this.getAttribute("data-id"));
         savePost(postId);
     });
