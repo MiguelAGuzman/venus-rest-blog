@@ -87,14 +87,5 @@ public class PostsController {
 //        throw new RuntimeException("Post not found");
     }
 
-    @RestController
-    class PostsController {
-        // ...
-        private final EmailService emailService;
 
-        public PostsController(EmailService emailService) {
-            this.emailService = emailService;
-        }
-        // ...
-    }
 }
