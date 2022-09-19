@@ -1,8 +1,8 @@
 package miguelguzman.venusrestblog.security;
 
 
-import com.example.restblog.errors.CustomAccessDeniedHandler;
-import com.example.restblog.errors.CustomAuthenticationEntryPoint;
+import miguelguzman.venusrestblog.error.CustomAccessDeniedHandler;
+import miguelguzman.venusrestblog.error.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
