@@ -7,6 +7,7 @@ import miguelguzman.venusrestblog.data.User;
 import miguelguzman.venusrestblog.repository.CategoriesRepository;
 import miguelguzman.venusrestblog.repository.PostsRepository;
 import miguelguzman.venusrestblog.repository.UsersRepository;
+import miguelguzman.venusrestblog.security.OAuthConfiguration;
 import miguelguzman.venusrestblog.service.EmailService;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,10 @@ public class PostsController {
     }
 
     @PostMapping("")
-    public void createPost(@RequestBody Post newPost) {
+    public void createPost(@RequestBody Post newPost, OAuthConfiguration auth) {
+        String userName = auth.getName();
+        User author = usersRepository.findByUserName(userName);
+        newPost.setAuthor(author);
 
         // use a fake author for the post
         User author = usersRepository.findById(1L).get();
