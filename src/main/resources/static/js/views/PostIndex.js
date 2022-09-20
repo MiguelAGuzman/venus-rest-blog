@@ -1,5 +1,5 @@
 import CreateView from "../createView.js";
-import {getHeaders} from "../auth";
+import {getHeaders} from "../auth.js";
 
 let posts;
 
