@@ -1,4 +1,5 @@
 import CreateView from "../createView.js";
+import {getHeaders} from "../auth";
 
 let posts;
 
@@ -59,14 +60,14 @@ function generatePostsHTML(posts) {
 
         let authorName = "";
         if(post.author) {
-            authorName = post.author.name;
+            authorName = post.author.userName;
         }
 
         postsHTML += `<tr>
             <td>${post.title}</td>
             <td>${post.content}</td>
             <td>${categories}</td>
-            <td>${post.author.user_name}</td>
+            <td>${authorName}</td>
             <td><button data-id=${post.id} class="button btn-primary editPost">Edit</button></td>
             <td><button data-id=${post.id} class="button btn-danger deletePost">Delete</button></td>
             </tr>`;
@@ -149,7 +150,7 @@ function setupDeleteHandlers() {
 function deletePost(postId) {
     const request = {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"},
+        headers: getHeaders(),
     }
     const url = "POST_API_BASE_URL" + `/${postId}`;
     fetch(url, request)
@@ -188,7 +189,7 @@ function savePost(postId) {
     // make the request
     const request = {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers:getHeaders(),
         body: JSON.stringify(post)
     }
     let url = POST_API_BASE_URL;
