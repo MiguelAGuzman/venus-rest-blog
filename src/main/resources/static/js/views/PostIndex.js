@@ -1,5 +1,6 @@
 import CreateView from "../createView.js";
 import {getHeaders} from "../auth.js";
+import {showNotification} from "../messaging.js";
 
 let posts;
 
@@ -20,12 +21,28 @@ export default function PostIndex(props) {
             
             <h3>Add a post</h3>
             <form>
-                <label for="title">Title</label><br>
-                <input id="title" name="title" type="text" placeholder="Enter title">
-                <br>
-                <label for="content">Content</label><br>
-                <textarea id="content" name="content" rows="10" cols="50" placeholder="Enter content"></textarea>
-                <br>
+                <div>
+                    <label for="title">Title</label><br>
+                    <input id="title" name="title" class="form-control" type="text" placeholder="Enter title">
+                    <div class="invalid-feedback">
+                        Title cannot be blank.
+                    </div>
+                    <div class="valid-feedback">
+                        Your title is ok!
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="content">Content</label><br>
+                    <textarea id="content" class="form-control" name="content" rows="10" cols="50" placeholder="Enter content"></textarea>
+                    <div class="invalid-feedback">
+                        Content cannot be blank.
+                    </div>
+                    <div class="valid-feedback">
+                        Content is ok!
+                    </div>
+                </div>
+                
                 <button data-id="0" id="savePost" name="savePost" class="button btn-primary">Save Post</button>
             </form>
             
@@ -46,23 +63,22 @@ function generatePostsHTML(posts) {
         </thead>
         <tbody>
     `;
-
     for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
 
         let categories = '';
-        for (let j = 0; j < post.categories.length; j++) {
-            if(categories !== "") {
-                categories += ", ";
+        if(post.categories) {
+            for (let j = 0; j < post.categories.length; j++) {
+                if (categories !== "") {
+                    categories += ", ";
+                }
+                categories += post.categories[j].name;
             }
-            categories += post.categories[j].name;
         }
-
         let authorName = "";
         if(post.author) {
             authorName = post.author.userName;
         }
-
         postsHTML += `<tr>
             <td>${post.title}</td>
             <td>${post.content}</td>
@@ -77,10 +93,46 @@ function generatePostsHTML(posts) {
 }
 
 
+
+
 export function postSetup() {
     setupSaveHandler();
     setupEditHandlers();
     setupDeleteHandlers();
+    setupValidationHandlers();
+    validateFields();
+}
+
+function setupValidationHandlers() {
+    let input = document.querySelector("#title");
+    input.addEventListener("keyup", validateFields);
+    input = document.querySelector("#content");
+    input.addEventListener("keyup", validateFields);
+}
+
+function validateFields() {
+    let isValid = true;
+    let input = document.querySelector("#title");
+    if(input.value.trim().length < 1) {
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+        isValid = false;
+    } else {
+        input.classList.add("is-valid");
+        input.classList.remove("is-invalid");
+    }
+
+    input = document.querySelector("#content");
+    if(input.value.trim().length < 1) {
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+        isValid = false;
+    } else {
+        input.classList.add("is-valid");
+        input.classList.remove("is-invalid");
+    }
+
+    return isValid;
 }
 
 function setupEditHandlers() {
@@ -88,7 +140,7 @@ function setupEditHandlers() {
     const editButtons = document.querySelectorAll(".editPost");
     // add click handler to all delete buttons
     for (let i = 0; i < editButtons.length; i++) {
-        editButtons[i].addEventListener("click", function() {
+        editButtons[i].addEventListener("click", function(event) {
 
             // get the post id of the delete button
             const postId = parseInt(this.getAttribute("data-id"));
@@ -137,7 +189,7 @@ function setupDeleteHandlers() {
     const deleteButtons = document.querySelectorAll(".deletePost");
     // add click handler to all delete buttons
     for (let i = 0; i < deleteButtons.length; i++) {
-        deleteButtons[i].addEventListener("click", function() {
+        deleteButtons[i].addEventListener("click", function(event) {
 
             // get the post id of the delete button
             const postId = this.getAttribute("data-id");
@@ -152,7 +204,7 @@ function deletePost(postId) {
         method: "DELETE",
         headers: getHeaders(),
     }
-    const url = "POST_API_BASE_URL" + `/${postId}`;
+    const url = POST_API_BASE_URL + `/${postId}`;
     fetch(url, request)
         .then(function(response) {
             if(response.status !== 200) {
@@ -167,9 +219,12 @@ function deletePost(postId) {
 
 
 
+
+
+
 function setupSaveHandler() {
     const saveButton = document.querySelector("#savePost");
-    saveButton.addEventListener("click", function() {
+    saveButton.addEventListener("click", function(event) {
         const postId = parseInt(this.getAttribute("data-id"));
         savePost(postId);
     });
@@ -180,6 +235,21 @@ function savePost(postId) {
     const titleField = document.querySelector("#title");
     const contentField = document.querySelector("#content");
 
+    // don't allow save if title or content are invalid
+    if(!validateFields()) {
+        return;
+    }
+
+    // don't need this anymore since I am now using bootstrap validation
+
+    // if(titleField.value.trim().length < 1) {
+    //     showNotification("Title cannot be blank!", "warning");
+    //     return;
+    // }
+    // if(contentField.value.trim().length < 1) {
+    //     showNotification("Content cannot be blank!", "warning");
+    //     return;
+    // }
     // make the new/updated post object
     const post = {
         title: titleField.value,
@@ -189,7 +259,7 @@ function savePost(postId) {
     // make the request
     const request = {
         method: "POST",
-        headers:getHeaders(),
+        headers: getHeaders(),
         body: JSON.stringify(post)
     }
     let url = POST_API_BASE_URL;
