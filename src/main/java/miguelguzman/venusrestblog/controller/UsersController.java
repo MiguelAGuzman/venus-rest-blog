@@ -7,6 +7,7 @@ import miguelguzman.venusrestblog.data.UserRole;
 import miguelguzman.venusrestblog.dto.UserFetchDTO;
 import miguelguzman.venusrestblog.misc.FieldHelper;
 import miguelguzman.venusrestblog.repository.UsersRepository;
+import miguelguzman.venusrestblog.service.S3Service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class UsersController {
     private UsersRepository usersRepository;
     private PasswordEncoder passwordEncoder;
+    private S3Service s3Service;
 
     @GetMapping("")
     public List<UserFetchDTO> fetchUsers() {
@@ -59,6 +61,8 @@ public class UsersController {
         }
         String userName = auth.getName();
         User user = usersRepository.findByUserName(userName);
+        user.setPhotourl(s3Service.getSignedURL(user.getPhotoFileName()));
+
         return Optional.of(user);
     }
 

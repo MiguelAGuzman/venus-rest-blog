@@ -5,6 +5,9 @@ export default function prepareUserHTML(props) {
     me = props.me;
 
     const userPostHTML = createPostHTML(me);
+
+    console.log(me);
+
     // make the user's original pw available somewhere in here
     return `
         <h1>User Info</h1>
