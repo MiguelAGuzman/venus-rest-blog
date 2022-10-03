@@ -36,5 +36,3 @@ public class Category {
     @JsonIgnoreProperties("categories")
     private Collection<Post> posts;
 }
-    @JsonIgnoreProperties("categories")
-    private Collection<Post> posts;
